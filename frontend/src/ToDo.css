@@ -1,0 +1,58 @@
+.App {
+    padding: 20px;
+  }
+  
+  .completed {
+    text-decoration: line-through;
+    color: grey;
+  }
+  
+  .dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  .dark-mode .btn-secondary {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  .dark-mode .form-control {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  
+  .dark-mode .list-group-item {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  
+  .dark-mode .badge {
+    background-color: #555555;
+  }
+.li{
+  padding: .5rem;
+}
+
+.task-list{
+  width: 20rem;
+}
+.card-container {
+  width: 28rem;
+  margin-left: 3rem;
+  margin-bottom: 1rem;
+}
+.task-list-container{
+  max-height: 400px;
+  overflow-y: auto;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.task-list-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.task-list-container {
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
+}
