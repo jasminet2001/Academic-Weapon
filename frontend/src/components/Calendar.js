@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { GoogleLogin, GoogleLogout } from "@leecheuk/react-google-login";
 import { gapi } from "gapi-script";
 
-const CLIENT_ID =
-  "210279610391-el366v0eg5ohct8l9fgj2jknndf5r1h8.apps.googleusercontent.com";
-const API_KEY = "AIzaSyBEY74S8yBtbDRdfwaD3KJeOiL1SFeLCmg";
+const CLIENT_ID = ".apps.googleusercontent.com";
+const API_KEY = "";
 const SCOPES = "https://www.googleapis.com/auth/calendar.events.readonly";
 
 const CalendarComponent = () => {
