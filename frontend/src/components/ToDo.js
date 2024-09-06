@@ -97,7 +97,7 @@ function TodoApp() {
 
   return (
     <div className="app">
-      <div className="card-container card px-3 justify-content-md-center">
+      <div className="card-container card px-3 justify-content-md-center shadow-lg p-3 mb-5 bg-body">
         <h2 className="card-title my-3">To-Do List App</h2>
 
         <form className="form-group my-3" onSubmit={addTask}>

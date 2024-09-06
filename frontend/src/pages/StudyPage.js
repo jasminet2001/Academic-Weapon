@@ -4,6 +4,7 @@ import Timer from "../components/Timer";
 import TodoApp from "../components/ToDo";
 import CalendarComponent from "../components/Calendar";
 import PlaylistPlayer from "../components/PlaylistPlayer";
+import BottomNavbar from "../components/Navbar";
 
 const StudyPage = () => {
   return (
@@ -22,6 +23,9 @@ const StudyPage = () => {
       </div>
       <div className="row">
         <PlaylistPlayer />
+      </div>
+      <div className="row">
+        <BottomNavbar />
       </div>
     </div>
   );

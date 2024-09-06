@@ -1,34 +1,58 @@
 import React, { useState } from "react";
 
-const SoundCloudPlayer = () => {
-  const [soundCloudUrl, setSoundCloudUrl] = useState("");
+const MusicPlayer = () => {
+  const [musicUrl, setMusicUrl] = useState("");
   const [embedUrl, setEmbedUrl] = useState("");
+  const [platform, setPlatform] = useState(""); // To track which platform is being played
 
   const handleInputChange = (e) => {
-    setSoundCloudUrl(e.target.value);
+    setMusicUrl(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const url = new URL(soundCloudUrl);
-    const path = url.pathname;
+
+    // Detect platform (SoundCloud or Spotify)
+    if (musicUrl.includes("soundcloud.com")) {
+      const soundCloudEmbedUrl = getSoundCloudEmbedUrl(musicUrl);
+      setEmbedUrl(soundCloudEmbedUrl);
+      setPlatform("SoundCloud");
+    } else if (musicUrl.includes("spotify.com")) {
+      const spotifyEmbedUrl = getSpotifyEmbedUrl(musicUrl);
+      setEmbedUrl(spotifyEmbedUrl);
+      setPlatform("Spotify");
+    } else {
+      alert("Please enter a valid SoundCloud or Spotify URL.");
+    }
+  };
+
+  // Function to generate SoundCloud embed URL
+  const getSoundCloudEmbedUrl = (url) => {
+    const parsedUrl = new URL(url);
+    const path = parsedUrl.pathname;
     const embedBaseUrl =
       "https://w.soundcloud.com/player/?url=https://soundcloud.com";
-    setEmbedUrl(
-      `${embedBaseUrl}${path}&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=true`
-    );
+    return `${embedBaseUrl}${path}&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&visual=true`;
+  };
+
+  // Function to generate Spotify embed URL
+  const getSpotifyEmbedUrl = (url) => {
+    const parsedUrl = new URL(url);
+    const path = parsedUrl.pathname;
+    const embedBaseUrl = "https://open.spotify.com/embed";
+    return `${embedBaseUrl}${path}`;
   };
 
   return (
-    <div className="container">
-      <div className="row mb-3">
+    <div className="container my-4">
+      <div className="row mb-3 w-75">
         <form onSubmit={handleSubmit} className="d-flex align-items-center">
           <input
             type="text"
-            placeholder="Enter SoundCloud URL"
-            value={soundCloudUrl}
+            placeholder="Enter SoundCloud or Spotify URL"
+            value={musicUrl}
             onChange={handleInputChange}
-            className="form-control col-md-auto me-2"
+            className="form-control me-2 shadow-lg  bg-body"
           />
           <button type="submit" className="btn btn-outline-primary">
             Play
@@ -37,16 +61,12 @@ const SoundCloudPlayer = () => {
       </div>
 
       {embedUrl && (
-        <div className="row">
+        <div className="row w-75">
           <iframe
-            title="SoundCloud Player"
-            width="100%"
-            height="100"
-            scrolling="no"
-            frameBorder="no"
-            allow="autoplay"
+            title={`${platform} Player`}
+            height="360"
+            allow="autoplay; encrypted-media"
             src={embedUrl}
-            className="col"
           ></iframe>
         </div>
       )}
@@ -54,4 +74,4 @@ const SoundCloudPlayer = () => {
   );
 };
 
-export default SoundCloudPlayer;
+export default MusicPlayer;

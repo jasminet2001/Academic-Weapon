@@ -112,7 +112,7 @@ const CalendarApp = () => {
   };
 
   return (
-    <div className="container card py-4 px-4">
+    <div className="container card py-4 px-4 shadow-lg p-3 mb-5 bg-body">
       <h1 className="card-title my-2">Google Calendar Events</h1>
       {!isLoggedIn ? (
         <GoogleLogin

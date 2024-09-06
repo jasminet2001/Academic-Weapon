@@ -101,7 +101,7 @@ const NotesApp = () => {
 
   return (
     <div
-      className="container my-2 card"
+      className="container my-2 card shadow-lg p-3 mb-5 bg-body"
       style={{ width: "22rem", height: "50rem", paddingTop: "2rem" }}
     >
       <div className="row justify-content-md-center card-title">
