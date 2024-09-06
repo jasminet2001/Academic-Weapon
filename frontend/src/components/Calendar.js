@@ -4,17 +4,17 @@ import { gapi } from "gapi-script";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction"; // If you need to drag and drop events
-import listPlugin from "@fullcalendar/list"; // If you want a list
-import bootstrapPlugin from "@fullcalendar/bootstrap5"; // Import Bootstrap plugin
+import interactionPlugin from "@fullcalendar/interaction";
+import listPlugin from "@fullcalendar/list";
+import bootstrapPlugin from "@fullcalendar/bootstrap5";
 import "../Calendar.css";
-const CLIENT_ID =
-  "210279610391-el366v0eg5ohct8l9fgj2jknndf5r1h8.apps.googleusercontent.com";
-const API_KEY = "AIzaSyC3iCgeUBr2YUzavl-KAC-w2d4k6VIlYkA";
 
 const CalendarApp = () => {
   const [events, setEvents] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const CLIENT_ID = process.env.REACT_APP_CALENDAR_CLIEND_ID;
+  const API_KEY = process.env.REACT_APP_CALENDAR_API_KEY;
 
   useEffect(() => {
     function start() {
@@ -41,7 +41,7 @@ const CalendarApp = () => {
       });
     }
     start();
-  }, []);
+  }, [CLIENT_ID]);
 
   const loadEvents = () => {
     gapi.client
@@ -65,7 +65,7 @@ const CalendarApp = () => {
         const events = response.result.items.map((event) => ({
           id: event.id,
           title: event.summary,
-          start: event.start.dateTime || event.start.date, // FullCalendar expects either dateTime or date
+          start: event.start.dateTime || event.start.date,
           end: event.end.dateTime || event.end.date,
         }));
         setEvents(events);
@@ -92,7 +92,7 @@ const CalendarApp = () => {
         dateTime: new Date().toISOString(),
       },
       end: {
-        dateTime: new Date(new Date().getTime() + 3600000).toISOString(), // 1 hour later
+        dateTime: new Date(new Date().getTime() + 3600000).toISOString(),
       },
     };
 
@@ -104,7 +104,7 @@ const CalendarApp = () => {
       .then(() => {
         alert("Event added successfully! Redirecting to Google Calendar...");
         window.open("https://calendar.google.com/calendar/u/0/r", "_blank");
-        loadEvents(); // Refresh the events list
+        loadEvents();
       })
       .catch((error) => {
         console.error("Error creating event:", error);
@@ -156,13 +156,13 @@ const CalendarApp = () => {
               center: "title",
               right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
             }}
-            events={events} // Fetch events dynamically as you were before
+            events={events}
             expandRows={true}
-            navLinks={true} // Allows navigation by clicking on day/week names
+            navLinks={true}
             editable={true}
             selectable={true}
             nowIndicator={true}
-            dayMaxEvents={true} // Shows "more" link when too many events
+            dayMaxEvents={true}
             aspectRatio={1}
             themeSystem="bootstrap5"
           />
