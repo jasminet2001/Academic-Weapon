@@ -5,6 +5,7 @@ import TodoApp from "../components/ToDo";
 import CalendarComponent from "../components/Calendar";
 import PlaylistPlayer from "../components/PlaylistPlayer";
 import BottomNavbar from "../components/Navbar";
+import Chatbot from "../components/Chatbot";
 
 const StudyPage = () => {
   const [showNotes, setShowNotes] = useState(true);
@@ -36,7 +37,7 @@ const StudyPage = () => {
   };
 
   return (
-    <div>
+    <div className="container w-100">
       <div className="row">{showNotes && <NotesApp />}</div>
       <div className="row">{showTimer && <Timer />}</div>
       <div className="row">{showTodo && <TodoApp />}</div>
@@ -46,6 +47,9 @@ const StudyPage = () => {
       <div className="row">
         <BottomNavbar toggleComponent={toggleComponentVisibility} />
       </div>
+      {/* <div className="row ">
+        <Chatbot />
+      </div> */}
     </div>
   );
 };
