@@ -4,16 +4,21 @@ import React from "react";
 import StudyPage from "./pages/StudyPage";
 import Chatbot from "./components/Chatbot";
 import SignUp from "./components/Signup";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
+  const clientId =
+    "210279610391-c3510jlifbejjr6s755ckel75226ejc4.apps.googleusercontent.com";
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<StudyPage />} />
-        <Route path="/chat" element={<Chatbot />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </Router>
+    <GoogleOAuthProvider clientId={clientId}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<StudyPage />} />
+          <Route path="/chat" element={<Chatbot />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Routes>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 
