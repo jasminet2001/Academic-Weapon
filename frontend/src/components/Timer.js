@@ -70,7 +70,7 @@ const Timer = () => {
   return (
     <div
       className="container my-2 card shadow-lg p-3 mb-5 bg-body"
-      style={{ width: "22rem", height: "32rem", paddingTop: "2rem" }}
+      style={{ width: "18rem", height: "28rem", paddingTop: "2rem" }}
     >
       <div className="row justify-content-md-center card-title">
         <h2 className="text-center">
@@ -79,7 +79,7 @@ const Timer = () => {
       </div>
 
       <div className="row justify-content-md-center mt-3">
-        <div className="col-md-auto mx-3">
+        <div className="col-md-auto">
           <span class="h1 ">
             {" "}
             {`${Math.floor(time / 60)}:${time % 60 < 10 ? "0" : ""}${
@@ -90,7 +90,7 @@ const Timer = () => {
         <button
           type="button"
           onClick={toggleTimer}
-          class="col-md-auto btn btn-outline-primary mx-1"
+          class="col-md-auto btn btn-outline-primary"
           style={{ width: "8rem", height: "3rem" }}
         >
           {isActive ? "Pause" : "Start"}
@@ -102,10 +102,10 @@ const Timer = () => {
 
       <div
         className="row justify-content-md-center mt-3"
-        style={{ width: "18rem", height: "28rem", paddingTop: "1rem" }}
+        style={{ width: "17rem", height: "28rem", paddingTop: "1rem" }}
       >
         <div className="col-md-auto">
-          <label className="mb-3">Work Time (minutes):</label>
+          <label className="mb-1">Work Time (minutes):</label>
           <input
             type="number"
             value={workTime}
@@ -115,7 +115,7 @@ const Timer = () => {
           />
         </div>
         <div className="col-md-auto">
-          <label className="mb-3">Short Break (minutes):</label>
+          <label className="mb-1">Short Break (minutes):</label>
           <input
             type="number"
             value={shortBreakTime}
@@ -125,7 +125,7 @@ const Timer = () => {
           />
         </div>
         <div className="col-md-auto">
-          <label className="mb-3">Long Break (minutes):</label>
+          <label className="mb-1">Long Break (minutes):</label>
           <input
             type="number"
             value={longBreakTime}

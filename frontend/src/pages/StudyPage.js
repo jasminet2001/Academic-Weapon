@@ -37,19 +37,20 @@ const StudyPage = () => {
   };
 
   return (
-    <div className="container w-100">
-      <div className="row">{showNotes && <NotesApp />}</div>
-      <div className="row">{showTimer && <Timer />}</div>
-      <div className="row">{showTodo && <TodoApp />}</div>
-      <div className="row">{showCalendar && <CalendarComponent />}</div>
-      <div className="row">{showPlaylist && <PlaylistPlayer />}</div>
-
+    <div className="container w-100" style={{ marginLeft: "120px" }}>
+      {" "}
+      {/* Added margin */}
       <div className="row">
-        <BottomNavbar toggleComponent={toggleComponentVisibility} />
+        <div className="col mt-2">{showNotes && <NotesApp />}</div>
+        <div className="col mt-2">
+          <div className="row">{showTimer && <Timer />}</div>
+          <div className="row">{showPlaylist && <PlaylistPlayer />}</div>
+        </div>
+        <div className="col mt-3">
+          <div className="row">{showTodo && <TodoApp />}</div>
+        </div>
       </div>
-      {/* <div className="row ">
-        <Chatbot />
-      </div> */}
+      <BottomNavbar toggleComponent={toggleComponentVisibility} />
     </div>
   );
 };

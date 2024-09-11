@@ -5,6 +5,8 @@ import StudyPage from "./pages/StudyPage";
 import Chatbot from "./components/Chatbot";
 import SignUp from "./components/Signup";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Login from "./components/Login";
+import CalendarApp from "./components/Calendar";
 
 function App() {
   const clientId =
@@ -15,7 +17,9 @@ function App() {
         <Routes>
           <Route path="/" element={<StudyPage />} />
           <Route path="/chat" element={<Chatbot />} />
+          <Route path="/calendar" element={<CalendarApp />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

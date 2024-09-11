@@ -4,12 +4,10 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import "../Signup.css";
 
-const SignUp = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    picture: "",
-    confirmPassword: "",
   });
 
   const [error, setError] = useState("");
@@ -73,8 +71,8 @@ const SignUp = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center">
-      <div className="card p-4 mt-5 shadow-lg p-3 mb-5 bg-body">
+    <div className="container d-flex justify-content-center ">
+      <div className="card p-5 mt-5 shadow-lg p-3 mb-5 bg-body">
         {/* the jumping car */}
         {/* <div className="row justify-content-center mb-3">
           {" "}
@@ -129,20 +127,7 @@ const SignUp = () => {
                   />
                 </div>
               </div>
-              <div className="form-row mb-4">
-                <div className="form-group">
-                  <label for="picture" className="mb-2">
-                    Photo
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control-file col-md-auto form-control"
-                    id="picture"
-                    value={formData.picture}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
+
               <div className="form-row mb-4">
                 <div className="form-group">
                   <label className="mb-2">Password</label>
@@ -156,32 +141,19 @@ const SignUp = () => {
                   />
                 </div>
               </div>
-              <div className="form-row mb-4">
-                <div className="form-group">
-                  <label className="mb-2">Confirm Password</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    className="col-md-auto form-control"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
 
               {error && <p style={{ color: "red" }}>{error}</p>}
               <div className="form-row">
                 <div className="form-group">
                   <button className="btn btn-primary w-100" type="submit">
-                    Sign Up
+                    Login
                   </button>
                 </div>
               </div>
 
               <div className="form-row mt-4">
                 <div className="form-group text-center">
-                  <p>Already have an account? Login</p>
+                  <p>Don't have an account? Sign Up</p>
                 </div>
               </div>
             </form>
@@ -214,7 +186,7 @@ const SignUp = () => {
             className="btn btn btn-outline-danger"
             onClick={login}
           >
-            <span class="bi bi-google"> Sign up with Google</span>
+            <span class="bi bi-google"> Sign in with Google</span>
           </button>
         )}
       </div>
@@ -222,4 +194,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

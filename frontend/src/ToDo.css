@@ -1,6 +1,4 @@
-.App {
-    padding: 20px;
-  }
+
   
   .completed {
     text-decoration: line-through;
@@ -38,12 +36,12 @@
   width: 20rem;
 }
 .card-container {
-  width: 28rem;
+  width: 27rem;
   margin-left: 3rem;
   margin-bottom: 1rem;
 }
 .task-list-container{
-  max-height: 400px;
+  max-height: 220px;
   overflow-y: auto;
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -55,4 +53,8 @@
 .task-list-container {
 -ms-overflow-style: none;  /* IE and Edge */
 scrollbar-width: none;  /* Firefox */
+}
+.buttons{
+  width: 50px;
+  height: 35px;
 }

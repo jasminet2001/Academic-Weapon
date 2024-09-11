@@ -44,8 +44,11 @@ const MusicPlayer = () => {
   };
 
   return (
-    <div className="container my-4">
-      <div className="row mb-3 w-75">
+    <div
+      className="container card my-4 p-2 align-items-center"
+      style={{ width: "23rem", height: "10rem" }}
+    >
+      <div className="row mb-3 w-100">
         <form onSubmit={handleSubmit} className="d-flex align-items-center">
           <input
             type="text"
@@ -54,17 +57,17 @@ const MusicPlayer = () => {
             onChange={handleInputChange}
             className="form-control me-2 shadow-lg  bg-body"
           />
-          <button type="submit" className="btn btn-outline-primary">
+          <button type="submit" className="btn btn-warning">
             Play
           </button>
         </form>
       </div>
 
       {embedUrl && (
-        <div className="row w-75">
+        <div className="row w-100">
           <iframe
             title={`${platform} Player`}
-            height="360"
+            height="150"
             allow="autoplay; encrypted-media"
             src={embedUrl}
           ></iframe>

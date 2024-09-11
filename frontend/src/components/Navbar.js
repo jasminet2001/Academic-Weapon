@@ -2,29 +2,62 @@ import React from "react";
 
 const BottomNavbar = ({ toggleComponent }) => {
   return (
-    <nav className="d-flex align-items-center navbar navbar-light bg-light w-25 mx-4 px-2 shadow-lg p-3 mb-5 bg-body rounded">
-      <button className="btn">
-        <span size="1.5em" className="bi bi-person-fill " />
-      </button>
-      <div className="vr"></div>
-
-      <button className="btn" onClick={() => toggleComponent("timer")}>
-        <span size="1.5em" className="bi bi-stopwatch" />
-      </button>
-
-      <button className="btn" onClick={() => toggleComponent("todo")}>
-        <span size="1.5em" className="bi bi-list-task" />
-      </button>
-
-      <button className="btn" onClick={() => toggleComponent("notes")}>
-        <span size="1.5em" className="bi bi-journal-richtext" />
-      </button>
-      <button className="btn me-2" onClick={() => toggleComponent("calendar")}>
-        <span size="1.5em" class="bi bi-calendar-day" />
+    <nav
+      className="navbar navbar-dark shadow-lg p-2 pt-5"
+      style={{
+        display: "flex", // Flexbox container
+        flexDirection: "column", // Arrange items in a column
+        justifyContent: "flex-start", // Align items at the start of the container
+        alignItems: "center", // Center items horizontally
+        gap: "60px", // Space between buttons
+        width: "80px",
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: 0,
+      }}
+    >
+      <button className="btn btn-success">
+        <span size="3em" className="bi bi-person-fill" />
       </button>
 
-      <button className="btn me-2" onClick={() => toggleComponent("playlist")}>
-        <span size="1.5em" className="bi bi-music-note-beamed" />
+      <button
+        className="btn btn-success"
+        onClick={() => toggleComponent("timer")}
+      >
+        <span size="3em" className="bi bi-stopwatch" />
+      </button>
+
+      <button
+        className="btn btn-success"
+        onClick={() => toggleComponent("todo")}
+      >
+        <span size="3em" className="bi bi-list-task" />
+      </button>
+
+      <button
+        className="btn btn-success"
+        onClick={() => toggleComponent("notes")}
+      >
+        <span size="3em" className="bi bi-journal-richtext" />
+      </button>
+
+      <button
+        className="btn btn-success"
+        onClick={() => toggleComponent("calendar")}
+      >
+        <span size="3em" className="bi bi-calendar-day" />
+      </button>
+
+      <button
+        className="btn btn-success"
+        onClick={() => toggleComponent("playlist")}
+      >
+        <span size="3em" className="bi bi-music-note-beamed" />
+      </button>
+
+      <button className="btn btn-danger">
+        <span size="3em" className="bi bi-door-closed-fill" />
       </button>
     </nav>
   );

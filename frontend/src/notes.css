@@ -1,0 +1,24 @@
+.notes-container{
+-ms-overflow-style: none;  /* IE and Edge */
+scrollbar-width: none;  /* Firefox */
+max-height: 170px;
+overflow-y: auto;
+}
+
+
+.notes-container::-webkit-scrollbar {
+    display: none;
+}
+.description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal; /* Allows wrapping and breaks long words */
+    max-width: 100%; /* Ensures the description doesn't exceed the width of the card */
+    display: block; /* Ensures the paragraph takes up the full width of the container */
+}
+.card {
+    width: 100%;
+    max-width: 300px; /* Or any suitable value */
+    overflow: hidden;
+}
+  

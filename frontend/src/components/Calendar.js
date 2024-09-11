@@ -123,7 +123,7 @@ const CalendarApp = () => {
           cookiePolicy={"single_host_origin"}
         />
       ) : (
-        <div className="calendar-container">
+        <div className="calendar-container" style={{ fontSize: "0.85rem" }}>
           <GoogleLogout
             clientId={CLIENT_ID}
             buttonText="Logout"
@@ -132,7 +132,7 @@ const CalendarApp = () => {
               <button
                 onClick={renderProps.onClick}
                 disabled={renderProps.disabled}
-                className="btn btn-outline-primary mx-2 my-2"
+                className="btn btn-outline-primary mx-2"
               >
                 Logout
               </button>
@@ -163,7 +163,7 @@ const CalendarApp = () => {
             selectable={true}
             nowIndicator={true}
             dayMaxEvents={true}
-            aspectRatio={1}
+            aspectRatio={1.23}
             themeSystem="bootstrap5"
           />
         </div>
