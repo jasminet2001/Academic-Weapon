@@ -90,12 +90,12 @@ const Timer = () => {
         <button
           type="button"
           onClick={toggleTimer}
-          class="col-md-auto btn btn-outline-primary"
-          style={{ width: "8rem", height: "3rem" }}
+          class="col-md-auto btn btn-outline-primary p-1"
+          style={{ width: "4rem", height: "2.5rem", marginTop: ".5rem" }}
         >
           {isActive ? "Pause" : "Start"}
         </button>
-        <div onClick={resetTimer} className="col-md-auto pt-2">
+        <div onClick={resetTimer} className="col-md-auto pt-2 mt-1">
           <i class="bi bi-arrow-clockwise align-middle"></i>
         </div>
       </div>

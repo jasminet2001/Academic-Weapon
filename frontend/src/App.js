@@ -7,6 +7,8 @@ import SignUp from "./components/Signup";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Login from "./components/Login";
 import CalendarApp from "./components/Calendar";
+import Profile from "./components/Profile";
+import EditProfile from "./components/Profile";
 
 function App() {
   const clientId =
@@ -20,6 +22,7 @@ function App() {
           <Route path="/calendar" element={<CalendarApp />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<EditProfile />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

@@ -1,0 +1,15 @@
+/* .form-group .invalid-feedback {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+  
+  .form-group {
+    position: relative;
+  } */
+  .preview-image {
+    margin-left: 5rem; /* Adjust the spacing as needed */
+  }
+
