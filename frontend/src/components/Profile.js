@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../Profile.css";
 import BottomNavbar from "./Navbar";
 
+
 const EditProfile = () => {
   const [formData, setFormData] = useState({
     name: "Doe",
