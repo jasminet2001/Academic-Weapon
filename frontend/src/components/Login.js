@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "../Signup.css";
 
 const Login = () => {
@@ -13,31 +14,65 @@ const Login = () => {
   const [error, setError] = useState("");
   const [profile, setProfile] = useState(null); // Profile from both manual form and Google login
   const [user, setUser] = useState(null); // Google user data
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
-      return;
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/accounts/login/",
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+
+      // Ensure response.data and response.data.tokens are defined
+      if (response && response.data && response.data.tokens) {
+        const { access, refresh } = response.data.tokens;
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
+        console.log("Login successful", response.data);
+
+        // After successful login, redirect to the StudyPage
+        navigate("/"); // Redirects to StudyPage (home)
+      } else {
+        throw new Error("Invalid response structure from the backend");
+      }
+    } catch (error) {
+      console.error("Login error", error.response?.data || error.message);
+      setError("Invalid login credentials");
     }
-    // Set profile with form data on successful submission
-    setProfile({
-      email: formData.email,
-      picture: formData.picture,
-    });
-    setError("");
-    console.log("Submitting sign up data:", formData);
   };
 
-  // Handles Google login success
-  const handleGoogleLoginSuccess = (response) => {
-    const decoded = jwtDecode(response.credential);
-    console.log("Google user data: ", decoded);
-    setProfile(decoded); // Use Google profile data directly
+  const handleGoogleLoginSuccess = async (response) => {
+    const token = response.credential;
+
+    try {
+      // Send Google token to the backend for validation
+      const result = await axios.post(
+        "http://localhost:8000/api/accounts/google-login/",
+        {
+          token,
+        }
+      );
+
+      console.log("Google login successful:", result.data);
+      setProfile(result.data.user);
+
+      // After successful Google login, redirect to the StudyPage
+      navigate("/"); // Redirects to StudyPage (home)
+    } catch (error) {
+      console.error(
+        "Google login error",
+        error.response?.data || error.message
+      );
+    }
   };
 
   // Use Google login to fetch user info
@@ -61,8 +96,8 @@ const Login = () => {
   }, [user]);
 
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => setUser(codeResponse),
-    onError: (error) => console.log("Login Failed:", error),
+    onSuccess: (codeResponse) => handleGoogleLoginSuccess(codeResponse),
+    onError: (error) => console.log("Google Login Failed:", error),
   });
 
   const logOut = () => {
@@ -95,7 +130,7 @@ const Login = () => {
         </div> */}
         <div className="row justify-content-center text-center">
           <h4 className="card-title">
-            <b>Create Your Account</b>
+            <b>Login to Your Account</b>
           </h4>
         </div>
         {!profile && (

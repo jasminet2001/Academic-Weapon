@@ -1,48 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../notes.css";
+import axios from "axios";
 
 const NotesApp = () => {
   const [notes, setNotes] = useState([]);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [currentNoteIndex, setCurrentNoteIndex] = useState(null);
+  const [currentNoteId, setCurrentNoteId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleAddNote = () => {
+  // Fetch notes when the component is mounted
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  const fetchNotes = async () => {
+    try {
+      const accessToken = localStorage.getItem("access_token"); // Retrieve JWT from localStorage
+
+      const response = await axios.get(
+        "http://localhost:8000/api/accounts/notes/",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Include the token in the headers
+          },
+        }
+      );
+
+      setNotes(response.data);
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  };
+
+  const handleAddNote = async () => {
     if (newTitle.trim() && newDescription.trim()) {
       const newNote = {
         title: newTitle,
         description: newDescription,
-        date: new Date(), // Add current date
       };
 
-      if (isEditing && currentNoteIndex !== null) {
-        const updatedNotes = notes.map((note, index) =>
-          index === currentNoteIndex ? newNote : note
-        );
-        setNotes(updatedNotes);
-        setIsEditing(false);
-        setCurrentNoteIndex(null);
-      } else {
-        setNotes([...notes, newNote]);
-      }
+      try {
+        const accessToken = localStorage.getItem("access_token");
 
-      setNewTitle("");
-      setNewDescription("");
+        if (isEditing && currentNoteId !== null) {
+          // Update an existing note
+          await axios.put(
+            `http://localhost:8000/api/accounts/notes/${currentNoteId}/`,
+            newNote,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+        } else {
+          // Add a new note
+          await axios.post(
+            "http://localhost:8000/api/accounts/notes/",
+            newNote,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+        }
+
+        fetchNotes(); // Refresh the notes list
+        setNewTitle("");
+        setNewDescription("");
+        setIsEditing(false);
+        setCurrentNoteId(null);
+      } catch (error) {
+        console.error("Error saving note:", error);
+      }
     }
   };
 
-  const handleEditNote = (index) => {
-    setCurrentNoteIndex(index);
-    setNewTitle(notes[index].title);
-    setNewDescription(notes[index].description);
+  const handleEditNote = (note) => {
+    setCurrentNoteId(note.id);
+    setNewTitle(note.title);
+    setNewDescription(note.description);
     setIsEditing(true);
   };
 
-  const handleDeleteNote = (index) => {
-    const updatedNotes = notes.filter((_, i) => i !== index);
-    setNotes(updatedNotes);
+  const handleDeleteNote = async (id) => {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      await axios.delete(`http://localhost:8000/api/accounts/notes/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      fetchNotes(); // Refresh the notes list after deletion
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
   };
 
   const handleTitleChange = (e) => {
@@ -129,18 +185,23 @@ const NotesApp = () => {
                 <h3>{note.title}</h3>
                 <p className="description">{note.description}</p>
                 <hr />
-                <small className="mx-1">{note.date.toLocaleString()}</small>
+                {/* Use optional chaining and provide a fallback */}
+                <small className="mx-1">
+                  {note.date
+                    ? new Date(note.date).toLocaleString()
+                    : "No Date Available"}
+                </small>
                 <div className="row my-1 justify-content-center">
                   <div className="d-flex justify-content-center gap-2">
                     <button
                       className="btn btn-sm btn-outline-secondary"
-                      onClick={() => handleEditNote(index)}
+                      onClick={() => handleEditNote(note)} // pass the note instead of index
                     >
                       Edit
                     </button>
                     <button
                       className="btn btn-sm btn-outline-danger"
-                      onClick={() => handleDeleteNote(index)}
+                      onClick={() => handleDeleteNote(note.id)} // pass the note id for deletion
                     >
                       Delete
                     </button>
