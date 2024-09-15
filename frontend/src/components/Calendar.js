@@ -113,11 +113,15 @@ const CalendarApp = () => {
   };
 
   return (
-    <div className="container py-4 px-4 mb-5">
+    <div className="container">
       <div className="row justify-content-center">
-        <div className="card shadow-lg p-2 bg-body w-75 mt-5">
+        <div
+          className="card shadow-lg py-4 px-4 bg-light bg-opacity-75 w-100 mt-4"
+          style={{ width: "25rem" }}
+        >
           {" "}
-          <h1 className="card-title my-2">Google Calendar Events</h1>
+          {/* <h1 className="card-title mb-3">Google Calendar Events</h1> */}
+          <h2>Your Events</h2>
           {!isLoggedIn ? (
             <GoogleLogin
               clientId={CLIENT_ID}
@@ -127,7 +131,7 @@ const CalendarApp = () => {
               cookiePolicy={"single_host_origin"}
             />
           ) : (
-            <div className="calendar-container" style={{ fontSize: "0.85rem" }}>
+            <div className="calendar-container" style={{ fontSize: "0.75rem" }}>
               <GoogleLogout
                 clientId={CLIENT_ID}
                 buttonText="Logout"
@@ -136,7 +140,7 @@ const CalendarApp = () => {
                   <button
                     onClick={renderProps.onClick}
                     disabled={renderProps.disabled}
-                    className="btn btn-outline-primary mx-2"
+                    className="btn btn-outline-danger mr-4 my-3"
                   >
                     Logout
                   </button>
@@ -144,11 +148,11 @@ const CalendarApp = () => {
               />
               <button
                 onClick={handleAddEvent}
-                className="btn btn-outline-primary"
+                className="btn btn-outline-primary mx-2 my-3"
               >
                 Add Event
               </button>
-              <h2 className="my-4">Your Events</h2>
+
               <FullCalendar
                 plugins={[
                   dayGridPlugin,
@@ -170,8 +174,10 @@ const CalendarApp = () => {
                 selectable={true}
                 nowIndicator={true}
                 dayMaxEvents={true}
-                aspectRatio={1.23}
+                aspectRatio={2}
                 themeSystem="bootstrap5"
+                eventColor="#378006"
+                eventBackgroundColor="#378006"
               />
             </div>
           )}

@@ -1,7 +1,19 @@
 .container {
-    width: 50%;
+    width: 60%;
     
   }
-
+  .calendar-container .fc {
+    background-color: #ffffffc5; 
+  
+    padding: .5rem;
+  }
+  .calendar-container .fc .fc-view-harness {
+    border-radius: inherit;
+  }
+  .calendar-container .fc-toolbar {
+    background-color: transparent !important;
+    padding: .5rem;
+  }
+  
 
   
