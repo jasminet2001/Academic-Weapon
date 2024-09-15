@@ -5,7 +5,6 @@ const BottomNavbar = ({ toggleComponent }) => {
   const navigate = useNavigate(); // For redirecting to StudyPage ("/")
   const location = useLocation(); // To check the current URL
 
-  // Helper function to handle button clicks
   const handleClick = (component) => {
     if (location.pathname !== "/") {
       // If not on StudyPage ("/"), redirect to StudyPage
@@ -48,10 +47,7 @@ const BottomNavbar = ({ toggleComponent }) => {
         <span size="3em" className="bi bi-journal-richtext" />
       </button>
 
-      <button
-        className="btn btn-success"
-        onClick={() => handleClick("calendar")}
-      >
+      <button className="btn btn-success" onClick={() => navigate("/calendar")}>
         <span size="3em" className="bi bi-calendar-day" />
       </button>
 

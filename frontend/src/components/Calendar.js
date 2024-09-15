@@ -8,6 +8,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
 import bootstrapPlugin from "@fullcalendar/bootstrap5";
 import "../Calendar.css";
+import BottomNavbar from "./Navbar";
 
 const CalendarApp = () => {
   const [events, setEvents] = useState([]);
@@ -112,62 +113,71 @@ const CalendarApp = () => {
   };
 
   return (
-    <div className="container card py-4 px-4 shadow-lg p-3 mb-5 bg-body">
-      <h1 className="card-title my-2">Google Calendar Events</h1>
-      {!isLoggedIn ? (
-        <GoogleLogin
-          clientId={CLIENT_ID}
-          buttonText="Login with Google"
-          onSuccess={handleLoginSuccess}
-          onFailure={(error) => console.error("Login Failed:", error)}
-          cookiePolicy={"single_host_origin"}
-        />
-      ) : (
-        <div className="calendar-container" style={{ fontSize: "0.85rem" }}>
-          <GoogleLogout
-            clientId={CLIENT_ID}
-            buttonText="Logout"
-            onLogoutSuccess={handleLogoutSuccess}
-            render={(renderProps) => (
+    <div className="container py-4 px-4 mb-5">
+      <div className="row justify-content-center">
+        <div className="card shadow-lg p-2 bg-body w-75 mt-5">
+          {" "}
+          <h1 className="card-title my-2">Google Calendar Events</h1>
+          {!isLoggedIn ? (
+            <GoogleLogin
+              clientId={CLIENT_ID}
+              buttonText="Login with Google"
+              onSuccess={handleLoginSuccess}
+              onFailure={(error) => console.error("Login Failed:", error)}
+              cookiePolicy={"single_host_origin"}
+            />
+          ) : (
+            <div className="calendar-container" style={{ fontSize: "0.85rem" }}>
+              <GoogleLogout
+                clientId={CLIENT_ID}
+                buttonText="Logout"
+                onLogoutSuccess={handleLogoutSuccess}
+                render={(renderProps) => (
+                  <button
+                    onClick={renderProps.onClick}
+                    disabled={renderProps.disabled}
+                    className="btn btn-outline-primary mx-2"
+                  >
+                    Logout
+                  </button>
+                )}
+              />
               <button
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-                className="btn btn-outline-primary mx-2"
+                onClick={handleAddEvent}
+                className="btn btn-outline-primary"
               >
-                Logout
+                Add Event
               </button>
-            )}
-          />
-          <button onClick={handleAddEvent} className="btn btn-outline-primary">
-            Add Event
-          </button>
-          <h2 className="my-4">Your Events</h2>
-          <FullCalendar
-            plugins={[
-              dayGridPlugin,
-              timeGridPlugin,
-              interactionPlugin,
-              listPlugin,
-              bootstrapPlugin,
-            ]}
-            initialView="dayGridMonth"
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
-            }}
-            events={events}
-            expandRows={true}
-            navLinks={true}
-            editable={true}
-            selectable={true}
-            nowIndicator={true}
-            dayMaxEvents={true}
-            aspectRatio={1.23}
-            themeSystem="bootstrap5"
-          />
+              <h2 className="my-4">Your Events</h2>
+              <FullCalendar
+                plugins={[
+                  dayGridPlugin,
+                  timeGridPlugin,
+                  interactionPlugin,
+                  listPlugin,
+                  bootstrapPlugin,
+                ]}
+                initialView="dayGridMonth"
+                headerToolbar={{
+                  left: "prev,next today",
+                  center: "title",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+                }}
+                events={events}
+                expandRows={true}
+                navLinks={true}
+                editable={true}
+                selectable={true}
+                nowIndicator={true}
+                dayMaxEvents={true}
+                aspectRatio={1.23}
+                themeSystem="bootstrap5"
+              />
+            </div>
+          )}
         </div>
-      )}
+      </div>
+      <BottomNavbar />
     </div>
   );
 };

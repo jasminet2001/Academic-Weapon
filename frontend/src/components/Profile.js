@@ -1,20 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Profile.css";
 import BottomNavbar from "./Navbar";
-
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
-    name: "Doe",
-    email: "doe@gmail.com",
-    password: "123",
-    retypePassword: "123",
-    profilePicture: "../../public/cute-cat-white.gif",
+    name: "",
+    email: "",
+    password: "",
+    retypePassword: "",
+    profilePicture: null,
   });
 
-  const [preview, setPreview] = useState(formData.profilePicture);
+  const [preview, setPreview] = useState(null);
   const [validated, setValidated] = useState(false);
   const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        const response = await axios.get(
+          "http://localhost:8000/api/accounts/profile/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const user = response.data;
+        setFormData({
+          name: user.name,
+          email: user.email,
+          password: "",
+          retypePassword: "",
+          profilePicture: user.profile_photo,
+        });
+        setPreview(user.profile_photo);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,17 +62,17 @@ const EditProfile = () => {
       ...formData,
       profilePicture: file,
     });
-    setPreview(URL.createObjectURL(file));
+    setPreview(URL.createObjectURL(file)); // Preview the uploaded image
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     const isFormValid = form.checkValidity();
-
-    // Check password match
     if (formData.password !== formData.retypePassword) {
       setPasswordMismatch(true);
+      setShowModal(true); // Show modal when passwords do not match
+      return;
     } else {
       setPasswordMismatch(false);
     }
@@ -48,8 +80,32 @@ const EditProfile = () => {
     if (!isFormValid || passwordMismatch) {
       e.stopPropagation();
     } else {
-      // Form is valid and passwords match
-      console.log("Form submitted successfully:", formData);
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("email", formData.email);
+      if (formData.password) {
+        form.append("password", formData.password);
+      }
+      form.append("profile_photo", formData.profilePicture); // Append file if present
+
+      try {
+        const token = localStorage.getItem("access_token");
+
+        const response = await axios.put(
+          "http://localhost:8000/api/accounts/update-profile/",
+          form,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log("Profile updated successfully:", response.data);
+      } catch (error) {
+        console.error("Error updating profile:", error.response.data);
+      }
     }
 
     setValidated(true);
@@ -104,7 +160,6 @@ const EditProfile = () => {
               <div className="form-group w-100 mb-3">
                 <div className="row d-flex align-items-center mb-3">
                   <div className="col">
-                    {" "}
                     <label htmlFor="name" className="form-label">
                       Name
                     </label>
@@ -113,7 +168,6 @@ const EditProfile = () => {
                       className="form-control"
                       id="name"
                       name="name"
-                      placeholder={formData.name}
                       value={formData.name}
                       onChange={handleChange}
                       required
@@ -123,7 +177,6 @@ const EditProfile = () => {
                     </div>
                   </div>
                   <div className="col">
-                    {" "}
                     <label htmlFor="email" className="form-label">
                       Email
                     </label>
@@ -132,7 +185,6 @@ const EditProfile = () => {
                       className="form-control"
                       id="email"
                       name="email"
-                      placeholder={formData.email}
                       value={formData.email}
                       onChange={handleChange}
                       required
@@ -145,10 +197,9 @@ const EditProfile = () => {
                 </div>
               </div>
 
-              {/* Password Field */}
+              {/* Password Fields */}
               <div className="form-group w-100">
                 <div className="row g-3 d-flex align-items-center mb-3">
-                  {" "}
                   <div className="col mb-3">
                     <label htmlFor="password" className="form-label">
                       Password
@@ -158,7 +209,6 @@ const EditProfile = () => {
                       className="form-control"
                       id="password"
                       name="password"
-                      placeholder={formData.password}
                       value={formData.password}
                       onChange={handleChange}
                       minLength="8"
@@ -179,7 +229,6 @@ const EditProfile = () => {
                       }`}
                       id="retypePassword"
                       name="retypePassword"
-                      placeholder={formData.retypePassword}
                       value={formData.retypePassword}
                       onChange={handleChange}
                       minLength="8"
@@ -205,6 +254,47 @@ const EditProfile = () => {
         </div>
       </div>
       <BottomNavbar />
+
+      {/* Bootstrap Modal */}
+      <div
+        className="modal fade"
+        id="passwordModal"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="passwordModalLabel"
+        aria-hidden="true"
+        show={showModal.toString()}
+      >
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="passwordModalLabel">
+                Password Mismatch
+              </h5>
+              <button
+                type="button"
+                className="close"
+                onClick={() => setShowModal(false)}
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              The passwords you entered do not match. Please try again.
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setShowModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
