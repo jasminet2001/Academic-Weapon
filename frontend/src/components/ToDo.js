@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../ToDo.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 
 function TodoApp() {
   const [tasks, setTasks] = useState([]);
@@ -9,65 +10,149 @@ function TodoApp() {
   const [dueDate, setDueDate] = useState("");
   const [priority, setPriority] = useState("Low");
   const [category, setCategory] = useState("");
-  const [newSubtask, setNewSubtask] = useState({}); // Store subtasks input for each task
+  const [newSubtask, setNewSubtask] = useState({});
+
+  // Helper function to get the access token from localStorage
+  const getAccessToken = () => localStorage.getItem("access_token");
+
+  // Fetch tasks from the Django backend on component mount
+  useEffect(() => {
+    const token = getAccessToken();
+    if (!token) return; // If no token is available, exit early
+
+    axios
+      .get("http://localhost:8000/api/accounts/tasks/", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      })
+      .then((response) => {
+        setTasks(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching tasks", error);
+      });
+  }, []);
 
   const addTask = (e) => {
     e.preventDefault();
     if (description.trim() === "") return;
 
+ 
+    const formattedDueDate = dueDate
+      ? new Date(dueDate).toISOString().split("T")[0]
+      : "";
+
     const newTask = {
-      id: Date.now(),
       description,
-      dueDate,
+      due_date: formattedDueDate,
       priority,
       category,
       completed: false,
-      subtasks: [],
     };
 
-    setTasks([...tasks, newTask]);
-    setDescription("");
-    setDueDate("");
-    setPriority("Low");
-    setCategory("");
-  };
+    const token = getAccessToken();
+    if (!token) return;
 
-  const updateTask = (updatedTask) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === updatedTask.id ? updatedTask : task
-    );
-    setTasks(updatedTasks);
+    axios
+      .post("http://localhost:8000/api/accounts/tasks/", newTask, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setTasks([...tasks, response.data]);
+        setDescription("");
+        setDueDate("");
+        setPriority("Low");
+        setCategory("");
+      })
+      .catch((error) => {
+        console.error("Error adding task", error);
+      });
   };
 
   const deleteTask = (id) => {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    setTasks(updatedTasks);
-  };
+    const token = getAccessToken();
+    if (!token) return;
 
-  const toggleComplete = (id) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updatedTasks);
+    axios
+      .delete(`http://localhost:8000/api/accounts/tasks/${id}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the headers
+        },
+      })
+      .then(() => {
+        setTasks(tasks.filter((task) => task.id !== id));
+      })
+      .catch((error) => {
+        console.error("Error deleting task", error);
+      });
   };
 
   const addSubtask = (taskId) => {
     const subtaskDescription = newSubtask[taskId];
-    if (!subtaskDescription) return; // Prevent adding empty subtasks
+    if (!subtaskDescription) return;
 
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === taskId) {
-        const updatedSubtasks = [
-          ...task.subtasks,
-          { id: Date.now(), description: subtaskDescription, completed: false },
-        ];
-        return { ...task, subtasks: updatedSubtasks };
-      }
-      return task;
-    });
+    const newSubtaskObj = {
+      description: subtaskDescription,
+      completed: false,
+      task: taskId,
+    };
 
-    setTasks(updatedTasks);
-    setNewSubtask({ ...newSubtask, [taskId]: "" }); // Reset input after adding
+    const token = getAccessToken();
+    if (!token) return;
+
+    axios
+      .post(
+        `http://localhost:8000/api/accounts/tasks/${taskId}/subtasks/`,
+        newSubtaskObj,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        }
+      )
+      .then((response) => {
+        setTasks(
+          tasks.map((task) =>
+            task.id === taskId
+              ? { ...task, subtasks: [...task.subtasks, response.data] }
+              : task
+          )
+        );
+        setNewSubtask({ ...newSubtask, [taskId]: "" });
+      })
+      .catch((error) => {
+        console.error("Error adding subtask", error);
+      });
+  };
+
+  const toggleComplete = (id) => {
+    const token = getAccessToken();
+    if (!token) return;
+
+    const task = tasks.find((task) => task.id === id);
+    axios
+      .patch(
+        `http://localhost:8000/api/accounts/tasks/${id}/`,
+        { completed: !task.completed },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        setTasks(
+          tasks.map((task) =>
+            task.id === id ? { ...task, completed: !task.completed } : task
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating task", error);
+      });
   };
 
   const toggleSubtaskComplete = (taskId, subtaskId) => {
