@@ -76,15 +76,27 @@ const Timer = () => {
     const newWorkTime = Number(e.target.value);
     setWorkTime(newWorkTime);
     if (!isActive && !isBreak) {
-      setTime(newWorkTime * 60); // Update timer immediately if not active and not on break
+      setTime(newWorkTime * 60);
     }
   };
 
   const saveWorkTime = (workTimeInSeconds) => {
     axios
-      .post("/api/save-work-time/", { work_time_in_seconds: workTimeInSeconds })
-      .then((response) => console.log(response.data))
-      .catch((error) => console.error("Error saving work time", error));
+      .post(
+        "http://localhost:8000/api/accounts/save-work-time/",
+        { work_time_in_seconds: workTimeInSeconds },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.error("Error saving work time", error.response);
+      });
   };
 
   return (

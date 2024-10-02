@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import Login from "./components/Login";
 import CalendarApp from "./components/Calendar";
 import EditProfile from "./components/Profile";
+import WorkTimeChart from "./components/WorkTimeChart";
 
 function App() {
   const clientId =
@@ -22,6 +23,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<EditProfile />} />
+          <Route path="/chart" element={<WorkTimeChart />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
