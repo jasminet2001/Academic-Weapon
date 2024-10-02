@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const Timer = () => {
   const [time, setTime] = useState(1 * 60); // 25 minutes in seconds
   const [isActive, setIsActive] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
   const [sessionCount, setSessionCount] = useState(0);
+  const [totalWorkTime, setTotalWorkTime] = useState(0); // Accumulated work time in seconds
 
   const [workTime, setWorkTime] = useState(1); // Work time in minutes (default 1 minute)
   const [shortBreakTime, setShortBreakTime] = useState(1); // Short break in minutes (default 1 minute)
@@ -16,7 +18,11 @@ const Timer = () => {
     if (isActive && time > 0) {
       interval = setInterval(() => {
         setTime(time - 1);
+        if (!isBreak) {
+          setTotalWorkTime((prevTotal) => prevTotal + 1);
+        }
       }, 1000);
+      console.log(`work time: ${totalWorkTime}`);
     } else if (time === 0) {
       console.log(isBreak);
       const buzzSound = new Audio("../../assets/buzz.mp3");
@@ -47,7 +53,14 @@ const Timer = () => {
     workTime,
     shortBreakTime,
     longBreakTime,
+    totalWorkTime,
   ]);
+
+  useEffect(() => {
+    if (time === 0 && !isBreak) {
+      saveWorkTime(totalWorkTime);
+    }
+  }, [time, isBreak, totalWorkTime]);
 
   const toggleTimer = () => {
     setIsActive(!isActive);
@@ -65,6 +78,13 @@ const Timer = () => {
     if (!isActive && !isBreak) {
       setTime(newWorkTime * 60); // Update timer immediately if not active and not on break
     }
+  };
+
+  const saveWorkTime = (workTimeInSeconds) => {
+    axios
+      .post("/api/save-work-time/", { work_time_in_seconds: workTimeInSeconds })
+      .then((response) => console.log(response.data))
+      .catch((error) => console.error("Error saving work time", error));
   };
 
   return (
