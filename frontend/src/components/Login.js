@@ -115,15 +115,6 @@ const Login = () => {
       <div className="row d-flex justify-content-center p-5">
         {/* the jumping car */}
         <div className="row justify-content-center">
-          {" "}
-          {/* <div className="col-auto">
-            <img
-              src="https://i.pinimg.com/originals/80/7b/5c/807b5c4b02e765bb4930b7c66662ef4b.gif"
-              alt="Cat Jumping"
-              className="img-fluid mt-2"
-              style={{ width: "80px", height: "80px" }}
-            />
-          </div> */}
           <div className="col-auto">
             <img
               src="https://media.tenor.com/8HaTOA3o0OoAAAAi/pixel-cat.gif"

@@ -94,7 +94,17 @@ const SignUp = () => {
 
   return (
     <div className="container">
-      <div className="row d-flex justify-content-center p-5">
+      <div className="row d-flex justify-content-center">
+        <div className="row justify-content-center">
+          <div className="col-auto">
+            <img
+              src="https://media.tenor.com/8HaTOA3o0OoAAAAi/pixel-cat.gif"
+              alt="Cat Jumping"
+              className="img-fluid"
+              style={{ width: "80px", height: "80px" }}
+            />
+          </div>
+        </div>
         <div className="card w-50 p-3 px-5 shadow-lg bg-body">
           <div className="row justify-content-center text-center mt-2">
             <h4 className="card-title">
