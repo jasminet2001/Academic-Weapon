@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
-
+import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import "../Signup.css";
@@ -16,7 +16,7 @@ const SignUp = () => {
 
   const [error, setError] = useState("");
   const [user, setUser] = useState(null); // Google user data
-  const [preview, setPreview] = useState(null); // Preview for the image
+  const [preview, setPreview] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -67,18 +67,16 @@ const SignUp = () => {
   };
 
   const login = useGoogleLogin({
-    flow: "implicit", // Ensure ID token is provided
+    flow: "implicit",
     onSuccess: async (codeResponse) => {
       try {
-        // Use id_token for decoding user information
-        const decodedToken = jwtDecode(codeResponse.id_token); // Correct JWT token
+        const decodedToken = jwtDecode(codeResponse.id_token);
         const { email, name, picture } = decodedToken;
 
-        // Now send the user data to your backend
         await axios.post("http://localhost:8000/api/accounts/google-signup/", {
           email,
           name,
-          picture, // Optional
+          picture,
         });
 
         console.log("User saved to database:", email, name);
@@ -96,9 +94,9 @@ const SignUp = () => {
 
   return (
     <div className="container">
-      <div className="row justify-content-center">
-        <div className="card w-75 p-4 mt-5 mb-5 shadow-lg bg-body">
-          <div className="row justify-content-center text-center">
+      <div className="row d-flex justify-content-center p-5">
+        <div className="card w-50 p-3 px-5 shadow-lg bg-body">
+          <div className="row justify-content-center text-center mt-2">
             <h4 className="card-title">
               <b>Create Your Account</b>
             </h4>
@@ -106,7 +104,7 @@ const SignUp = () => {
 
           <div className="row justify-content-center">
             <form onSubmit={handleSubmit}>
-              <div className="form-group w-100 mt-4 mb-3">
+              <div className="form-group w-100 mt-4">
                 <div className="row d-flex align-items-center">
                   <div className="col">
                     <label className="mb-2">Name</label>
@@ -119,6 +117,12 @@ const SignUp = () => {
                       required
                     />
                   </div>
+                </div>
+              </div>
+
+              <div className="form-group w-100 mt-2">
+                <div className="row d-flex align-items-center">
+                  {" "}
                   <div className="col">
                     <label className="mb-2">Email</label>
                     <input
@@ -132,10 +136,9 @@ const SignUp = () => {
                   </div>
                 </div>
               </div>
-
-              <div className="form-group w-100 mt-4 mb-3">
+              <div className="form-group w-100 mt-2">
                 <div className="row d-flex align-items-center">
-                  <div className="col">
+                  {/* <div className="col">
                     {preview && (
                       <img
                         src={preview}
@@ -148,14 +151,12 @@ const SignUp = () => {
                         }}
                       />
                     )}
-                  </div>
-                  <div className="col">
-                    <label htmlFor="picture" className="mb-2">
-                      Photo
-                    </label>
+                  </div> */}
+                  <div className="col w-100">
+                    <label htmlFor="picture">Photo</label>
                     <input
                       type="file"
-                      className="form-control-file col-md-auto form-control"
+                      className="form-control-file form-control"
                       id="picture"
                       name="picture"
                       onChange={handleChange}
@@ -164,7 +165,7 @@ const SignUp = () => {
                 </div>
               </div>
 
-              <div className="form-group w-100 mt-4 mb-5">
+              <div className="form-group w-100 mt-2">
                 <div className="row d-flex align-items-center">
                   <div className="col">
                     <label className="mb-2">Password</label>
@@ -177,6 +178,11 @@ const SignUp = () => {
                       required
                     />
                   </div>
+                </div>
+              </div>
+
+              <div className="form-group w-100 mt-2 mb-5">
+                <div className="row d-flex align-items-center">
                   <div className="col">
                     <label className="mb-2">Confirm Password</label>
                     <input
@@ -193,7 +199,7 @@ const SignUp = () => {
 
               {error && <p style={{ color: "red" }}>{error}</p>}
 
-              <div className="form-row m-4">
+              <div className="form-row">
                 <button className="btn btn-primary w-100" type="submit">
                   Sign Up
                 </button>
@@ -201,15 +207,20 @@ const SignUp = () => {
 
               <div className="form-row mt-2">
                 <div className="form-group text-center">
-                  <p>Already have an account? Login</p>
+                  <p>
+                    Already have an account?{" "}
+                    <Link to="/login" style={{ textDecoration: "none" }}>
+                      {" "}
+                      Login
+                    </Link>
+                  </p>
                 </div>
               </div>
             </form>
           </div>
 
-          <hr />
-
-          <div>
+          {/* <hr /> */}
+          {/* <div>
             <div className="form-row m-4">
               <button
                 type="button"
@@ -219,7 +230,7 @@ const SignUp = () => {
                 <span class="bi bi-google"> Sign up with Google</span>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

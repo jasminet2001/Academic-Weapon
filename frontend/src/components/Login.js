@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate, Link } from "react-router-dom";
 import "../Signup.css";
 
 const Login = () => {
@@ -12,8 +12,8 @@ const Login = () => {
   });
 
   const [error, setError] = useState("");
-  const [profile, setProfile] = useState(null); // Profile from both manual form and Google login
-  const [user, setUser] = useState(null); // Google user data
+  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,15 +32,13 @@ const Login = () => {
         }
       );
 
-      // Ensure response.data and response.data.tokens are defined
       if (response && response.data && response.data.tokens) {
         const { access, refresh } = response.data.tokens;
         localStorage.setItem("access_token", access);
         localStorage.setItem("refresh_token", refresh);
         console.log("Login successful", response.data);
 
-        // After successful login, redirect to the StudyPage
-        navigate("/"); // Redirects to StudyPage (home)
+        navigate("/");
       } else {
         throw new Error("Invalid response structure from the backend");
       }
@@ -54,7 +52,7 @@ const Login = () => {
     const token = response.credential;
 
     try {
-      // Send Google token to the backend for validation
+      // Send Google token to the backend for validation and token generation
       const result = await axios.post(
         "http://localhost:8000/api/accounts/google-login/",
         {
@@ -62,11 +60,13 @@ const Login = () => {
         }
       );
 
-      console.log("Google login successful:", result.data);
+      const { access, refresh } = result.data.tokens; // Assuming backend returns tokens
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
+
       setProfile(result.data.user);
 
-      // After successful Google login, redirect to the StudyPage
-      navigate("/"); // Redirects to StudyPage (home)
+      navigate("/");
     } catch (error) {
       console.error(
         "Google login error",
@@ -75,7 +75,6 @@ const Login = () => {
     }
   };
 
-  // Use Google login to fetch user info
   useEffect(() => {
     if (user) {
       axios
@@ -103,127 +102,141 @@ const Login = () => {
   const logOut = () => {
     googleLogout();
     setProfile(null);
+
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+
+    navigate("/login");
   };
 
   return (
-    <div className="container d-flex justify-content-center ">
-      <div className="card p-5 mt-5 shadow-lg p-3 mb-5 bg-body">
+    <div className="container">
+      {" "}
+      <div className="row d-flex justify-content-center p-5">
         {/* the jumping car */}
-        {/* <div className="row justify-content-center mb-3">
+        <div className="row justify-content-center">
           {" "}
+          {/* <div className="col-auto">
+            <img
+              src="https://i.pinimg.com/originals/80/7b/5c/807b5c4b02e765bb4930b7c66662ef4b.gif"
+              alt="Cat Jumping"
+              className="img-fluid mt-2"
+              style={{ width: "80px", height: "80px" }}
+            />
+          </div> */}
           <div className="col-auto">
             <img
-              src="../../public/cute-cat-white.gif"
+              src="https://media.tenor.com/8HaTOA3o0OoAAAAi/pixel-cat.gif"
               alt="Cat Jumping"
               className="img-fluid"
-              style={{ width: "20px", height: "20px" }}
+              style={{ width: "80px", height: "80px" }}
             />
           </div>
-          <div className="col-auto">
-            <img
-              src="path-to-second-cat-gif.gif"
-              alt="Cat Jumping"
-              className="img-fluid"
-              style={{ width: "100px" }}
-            />
-          </div>
-        </div> */}
-        <div className="row justify-content-center text-center">
-          <h4 className="card-title">
-            <b>Login to Your Account</b>
-          </h4>
         </div>
-        {!profile && (
-          <div className="row justify-content-center">
-            <form onSubmit={handleSubmit}>
-              {/* <div className="form-row mb-4 mt-4">
-                <div className="form-group">
-                  <label className="mb-2">Name</label>
-                  <input
-                    className="col-md-auto form-control"
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div> */}
-              <div className="form-row mb-4 mt-4">
-                <div className="form-group">
-                  <label className="mb-2">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    className="col-md-auto form-control"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-row mb-4">
-                <div className="form-group">
-                  <label className="mb-2">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    className="col-md-auto form-control"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              {error && <p style={{ color: "red" }}>{error}</p>}
-              <div className="form-row">
-                <div className="form-group">
-                  <button className="btn btn-primary w-100" type="submit">
-                    Login
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-row mt-4">
-                <div className="form-group text-center">
-                  <p>Don't have an account? Sign Up</p>
-                </div>
-              </div>
-            </form>
+        <div className="card p-5 shadow-lg p-3 mb-5 bg-body w-50">
+          <div className="row justify-content-center text-center">
+            <h4 className="card-title">
+              <b>Login to Your Account</b>
+            </h4>
           </div>
-        )}
+          {!profile && (
+            <div className="row justify-content-center">
+              <form onSubmit={handleSubmit}>
+                {/* <div className="form-row mb-4 mt-4">
+              <div className="form-group">
+                <label className="mb-2">Name</label>
+                <input
+                  className="col-md-auto form-control"
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div> */}
+                <div className="form-row mb-4 mt-4">
+                  <div className="form-group">
+                    <label className="mb-2">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="col-md-auto form-control"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-        <hr />
+                <div className="form-row mb-4">
+                  <div className="form-group">
+                    <label className="mb-2">Password</label>
+                    <input
+                      type="password"
+                      name="password"
+                      className="col-md-auto form-control"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
 
-        {profile ? (
-          <div>
-            <img
-              src={profile.picture || "https://via.placeholder.com/100"}
-              alt="User Profile"
-            />
-            <h3>User Logged in</h3>
-            <p>Name: {profile.name}</p>
-            <p>Email Address: {profile.email}</p>
-            <br />
+                {error && <p style={{ color: "red" }}>{error}</p>}
+                <div className="form-row">
+                  <div className="form-group">
+                    <button className="btn btn-primary w-100" type="submit">
+                      Login
+                    </button>
+                  </div>
+                </div>
+
+                <div className="form-row mt-4">
+                  <div className="form-group text-center">
+                    <p>
+                      Don't have an account?
+                      <Link to="/signup" style={{ textDecoration: "none" }}>
+                        {" "}
+                        Sign Up
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+              </form>
+            </div>
+          )}
+
+          <hr />
+
+          {profile ? (
+            <div>
+              <img
+                src={profile.picture || "https://via.placeholder.com/100"}
+                alt="User Profile"
+              />
+              <h3>User Logged in</h3>
+              <p>Name: {profile.name}</p>
+              <p>Email Address: {profile.email}</p>
+              <br />
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={logOut}
+              >
+                Log out
+              </button>
+            </div>
+          ) : (
             <button
               type="button"
-              className="btn btn-outline-primary"
-              onClick={logOut}
+              className="btn btn btn-outline-danger"
+              onClick={login}
             >
-              Log out
+              <span class="bi bi-google"> Sign in with Google</span>
             </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            className="btn btn btn-outline-danger"
-            onClick={login}
-          >
-            <span class="bi bi-google"> Sign in with Google</span>
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const BottomNavbar = ({ toggleComponent }) => {
   const navigate = useNavigate(); // For redirecting to StudyPage ("/")
-  const location = useLocation(); // To check the current URL
+  const location = useLocation();
 
   const handleClick = (component) => {
     if (location.pathname !== "/") {
@@ -14,16 +15,39 @@ const BottomNavbar = ({ toggleComponent }) => {
       toggleComponent(component);
     }
   };
+  const handleLogout = async () => {
+    try {
+      const refreshToken = localStorage.getItem("refresh_token");
+      const accessToken = localStorage.getItem("access_token");
+      if (refreshToken && accessToken) {
+        await axios.post(
+          "http://localhost:8000/api/accounts/logout/",
+          { refresh_token: refreshToken },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
   return (
     <nav
-      className="navbar navbar-dark shadow-lg p-2 pt-5"
+      className="navbar navbar-dark shadow-lg p-2 pt-4"
       style={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
-        gap: "60px",
+        gap: "40px",
         width: "80px",
         height: "100vh",
         position: "fixed",
@@ -32,34 +56,42 @@ const BottomNavbar = ({ toggleComponent }) => {
       }}
     >
       <button className="btn btn-success" onClick={() => navigate("/profile")}>
-        <span size="3em" className="bi bi-person-fill" />
+        <span size="1em" className="bi bi-person-fill" />
       </button>
 
       <button className="btn btn-success" onClick={() => handleClick("timer")}>
-        <span size="3em" className="bi bi-stopwatch" />
+        <span size="1em" className="bi bi-stopwatch" />
       </button>
 
       <button className="btn btn-success" onClick={() => handleClick("todo")}>
-        <span size="3em" className="bi bi-list-task" />
+        <span size="1em" className="bi bi-list-task" />
       </button>
 
       <button className="btn btn-success" onClick={() => handleClick("notes")}>
-        <span size="3em" className="bi bi-journal-richtext" />
+        <span size="1em" className="bi bi-journal-richtext" />
       </button>
 
       <button className="btn btn-success" onClick={() => navigate("/calendar")}>
-        <span size="3em" className="bi bi-calendar-day" />
+        <span size="1em" className="bi bi-calendar-day" />
       </button>
 
       <button
         className="btn btn-success"
         onClick={() => handleClick("playlist")}
       >
-        <span size="3em" className="bi bi-music-note-beamed" />
+        <span size="1em" className="bi bi-music-note-beamed" />
       </button>
 
-      <button className="btn btn-danger">
-        <span size="3em" className="bi bi-door-closed-fill" />
+      <button className="btn btn-success" onClick={() => navigate("/chat")}>
+        <span size="1em" className="bi bi-robot" />
+      </button>
+
+      <button className="btn btn-success" onClick={() => navigate("/chart")}>
+        <span size="1em" className="bi bi-pie-chart-fill" />
+      </button>
+
+      <button className="btn btn-danger" onClick={handleLogout}>
+        <span size="1em" className="bi bi-door-closed-fill" />
       </button>
     </nav>
   );
