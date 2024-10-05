@@ -1,0 +1,28 @@
+/* Scrollable container */
+.scroll-container {
+    height: 280px; /* Adjust height as needed */
+    overflow-y: scroll;
+    padding-right: 15px; /* To prevent content cut-off */
+  }
+  
+  /* Hide scrollbar on Webkit browsers (Chrome, Safari) */
+  .scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar on Firefox */
+  .scroll-container {
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  /* Ensure the scrollbar doesn't impact the layout */
+  .scroll-container {
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+.add-flashcard-form{
+    height: 70%;
+}
+.wrapping{
+  width: 50%;
+}

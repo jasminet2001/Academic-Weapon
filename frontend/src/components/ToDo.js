@@ -322,7 +322,7 @@ function TodoApp() {
                   </span>
                 </div>
                 <div className="col col-md-auto mx-1 p-0">
-                  <span className="badge bg-success ">{task.category}</span>
+                  <span className="badge bg-success">{task.category}</span>
                 </div>
               </div>
 

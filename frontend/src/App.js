@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import CalendarApp from "./components/Calendar";
 import EditProfile from "./components/Profile";
 import WorkTimeChart from "./components/WorkTimeChart";
+import FlashcardList from "./components/FlashCardList";
 
 function App() {
   const clientId =
@@ -24,6 +25,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<EditProfile />} />
           <Route path="/chart" element={<WorkTimeChart />} />
+          <Route path="/cards" element={<FlashcardList />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

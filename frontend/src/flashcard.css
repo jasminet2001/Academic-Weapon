@@ -1,0 +1,37 @@
+
+.flashcard-container {
+    position: relative;
+    width: 37%;
+    height: 16em;
+    perspective: 1000px;  /* Adds depth to the flip effect */
+    cursor: pointer;
+    padding-top: 1em;
+  }
+  
+  .flashcard {
+    position: absolute;
+    width: 95%;
+    height: 11em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    backface-visibility: hidden;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .front {
+    background-color: #f0f0f0;
+  }
+  
+  .back {
+    background-color: #0073e6;
+    color: #fff;
+    transform: rotateY(180deg);  /* Start with the back side hidden */
+  }
+  .flashcard-controls{
+    padding-top: 12em;
+  }
+  
