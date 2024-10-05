@@ -1,105 +1,97 @@
 import React, { useState } from "react";
-import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-import {
-  MainContainer,
-  ChatContainer,
-  MessageList,
-  Message,
-  MessageGroup,
-  MessageInput,
-  TypingIndicator,
-} from "@chatscope/chat-ui-kit-react";
+import axios from "axios";
+import BottomNavbar from "./Navbar";
+import "../chat.css";
+const ChatBot = () => {
+  const [userInput, setUserInput] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-const API_KEY = "U_VAT3BlbkFJJ7HNYNIE8Y6bZdjRZumSaj_r2Gr0sxY7c2cA";
-
-function Chatbot() {
-  const [messages, setMessages] = useState([
-    {
-      message: "Hello, I'm ChatGPT! Ask me anything!",
-      sentTime: "just now",
-      sender: "ChatGPT",
-    },
-  ]);
-  const [isTyping, setIsTyping] = useState(false);
-
-  const handleSend = async (message) => {
-    const newMessage = {
-      message: message,
-      sender: "user",
-      direction: "outgoing",
-    };
-    const newMessages = [...messages, newMessage];
-    setMessages(newMessages);
-    setIsTyping(true);
-    await processMessageToChatGPT(newMessages);
+  const handleInputChange = (e) => {
+    setUserInput(e.target.value);
   };
 
-  async function processMessageToChatGPT(chatMessages) {
-    let apiMessages = chatMessages.map((messageObject) => {
-      let role = messageObject.sender === "ChatGPT" ? "assistant" : "user";
-      return { role: role, content: messageObject.message }; // Use "message" instead of "content"
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-    const systemMessage = {
-      role: "system",
-      content:
-        "Explain things like you're talking to a software professional with 2 years of experience.",
-    };
+    const formattedInput = `The answer to the problem is [MASK].`;
+    const response = await query({ inputs: formattedInput });
 
-    const apiRequestBody = {
-      model: "gpt-3.5-turbo",
-      messages: [systemMessage, ...apiMessages],
-    };
+    const botResponse =
+      Array.isArray(response) && response.length > 0
+        ? response[0].sequence
+        : "I'm sorry, I couldn't find an answer.";
 
-    await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify(apiRequestBody),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data); // Output response from ChatGPT
-        setMessages([
-          ...chatMessages,
-          { message: data.choices[0].message.content, sender: "ChatGPT" },
-        ]);
-        setIsTyping(false);
-      });
-  }
+    setChatHistory([...chatHistory, { user: userInput, bot: botResponse }]);
+    setUserInput("");
+    setLoading(false);
+  };
+
+  const query = async (payload) => {
+    const API_URL =
+      "https://api-inference.huggingface.co/models/distilbert/distilbert-base-uncased";
+    const headers = {
+      Authorization: `Bearer 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`,
+    }; // Replace with your API key
+
+    try {
+      const res = await axios.post(API_URL, payload, { headers });
+      return res.data; // Return the response data
+    } catch (error) {
+      console.error(
+        "Error fetching data from Hugging Face:",
+        error.response ? error.response.data : error.message
+      );
+      return "I'm sorry, there was an error processing your request.";
+    }
+  };
 
   return (
-    <div className="App">
-      <div style={{ position: "relative", height: "800px", width: "700px" }}>
-        <MainContainer>
-          <ChatContainer>
-            <MessageList
-              scrollBehavior="smooth"
-              typingIndicator={
-                isTyping ? (
-                  <TypingIndicator content="ChatGPT is typing" />
-                ) : null
-              }
-            >
-              {messages.map((message, i) => (
-                <MessageGroup
-                  key={i}
-                  model={{
-                    message: message.message,
-                    sentTime: message.sentTime,
-                    sender: message.sender,
-                  }}
+    <div className="container py-5">
+      <div className="row justify-content-center">
+        {" "}
+        <div className="card main-card p-4">
+          {" "}
+          <div className="row">
+            {" "}
+            <h1>AI Chat Bot</h1>
+          </div>
+          <div className="row my-4">
+            {" "}
+            <form onSubmit={handleSubmit}>
+              <div className="col">
+                {" "}
+                <input
+                  className="form-control"
+                  type="text"
+                  value={userInput}
+                  onChange={handleInputChange}
+                  placeholder="Ask me a question..."
                 />
-              ))}
-            </MessageList>
-            <MessageInput placeholder="Type message here" onSend={handleSend} />
-          </ChatContainer>
-        </MainContainer>
+              </div>
+              <div className="col">
+                {" "}
+                <button className="btn btn-primary my-2" type="submit">
+                  Send
+                </button>
+              </div>
+            </form>
+          </div>
+          <div className="chat-history">
+            {chatHistory.map((chat, index) => (
+              <div key={index}>
+                <strong>You:</strong> {chat.user}
+                <br />
+                <strong>Bot:</strong> {loading ? "..." : chat.bot}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+      <BottomNavbar />
     </div>
   );
-}
+};
 
-export default Chatbot;
+export default ChatBot;

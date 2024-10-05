@@ -1,0 +1,14 @@
+.chat-history {
+    max-height: 150px; /* Adjust this height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    /* Hides scrollbar for webkit browsers */
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  }
+  
+  .chat-history::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+  }
+  .main-card{
+    width: 50rem;
+  }
