@@ -181,16 +181,17 @@ const NotesApp = () => {
         <div className="notes-container">
           <ul className="d-flex flex-column align-items-center p-0">
             {filteredAndSortedNotes.map((note, index) => (
-              <li key={index} className="card p-2 my-1 notes-li">
+              <li key={index} className="card p-3 my-1 notes-li">
                 <h3>{note.title}</h3>
                 <p className="description">{note.description}</p>
                 <hr />
                 {/* Use optional chaining and provide a fallback */}
-                <small className="mx-1">
-                  {note.date
-                    ? new Date(note.date).toLocaleString()
+                <small className="mx-1 mb-2">
+                  {note.date_created
+                    ? new Date(note.date_created).toLocaleString()
                     : "No Date Available"}
                 </small>
+
                 <div className="row my-1 justify-content-center">
                   <div className="d-flex justify-content-center gap-2">
                     <button

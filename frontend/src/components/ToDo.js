@@ -9,7 +9,7 @@ function TodoApp() {
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [priority, setPriority] = useState("Low");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Calc1");
   const [newSubtask, setNewSubtask] = useState({});
 
   // Helper function to get the access token from localStorage
@@ -38,7 +38,6 @@ function TodoApp() {
     e.preventDefault();
     if (description.trim() === "") return;
 
- 
     const formattedDueDate = dueDate
       ? new Date(dueDate).toISOString().split("T")[0]
       : "";
@@ -65,7 +64,7 @@ function TodoApp() {
         setDescription("");
         setDueDate("");
         setPriority("Low");
-        setCategory("");
+        setCategory("Calc1");
       })
       .catch((error) => {
         console.error("Error adding task", error);
@@ -175,14 +174,14 @@ function TodoApp() {
     if (filter === "incomplete") return tasks.filter((task) => !task.completed);
     if (filter === "today") {
       const today = new Date().toISOString().split("T")[0];
-      return tasks.filter((task) => task.dueDate === today);
+      return tasks.filter((task) => task.due_date === today);
     }
     return tasks;
   };
 
   return (
     <div className="card-container card px-3 justify-content-md-center shadow-lg p-3 bg-body">
-      <h2 className="card-title my-3">To-Do List App</h2>
+      <h2 className="card-title my-3 text-center">To-Do List App</h2>
 
       <form className="form-group my-3" onSubmit={addTask}>
         <div className="row my-3">
@@ -194,13 +193,16 @@ function TodoApp() {
               onChange={(e) => setDescription(e.target.value)}
               className="form-control mb-3"
             />
-            <input
-              type="text"
-              placeholder="Category"
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="form-control"
-            />
+              className="form-select"
+            >
+              <option value="Calc1">Calc1</option>
+              <option value="Physics">Physics</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Coding">Coding</option>
+            </select>
           </div>
           <div className="col col-md-auto">
             <select
@@ -306,7 +308,7 @@ function TodoApp() {
 
               <div className="row my-3 mx-3">
                 <div className="col col-md-auto mx-1 p-0">
-                  <div className="badge bg-secondary">{task.dueDate}</div>
+                  <div className="badge bg-secondary">{task.due_date}</div>
                 </div>
                 <div className="col col-md-auto mx-1 p-0">
                   <span
